@@ -432,13 +432,10 @@ class PlanningGraph():
         :param node_a2: PgNode_a
         :return: bool
         '''
-        actions_s1 = node_a1.parents
-        actions_s2 = node_a2.parents
-        return True if [(a_s1, a_s2)
-                         for a_s1 in actions_s1
-                         for a_s2 in actions_s2
-                         if a_s1.is_mutex(a_s2)] \
-                    else False
+        return is_effect_mutex(node_a1.action.effect_add, node_a2.action.precond_neg) or \
+               is_effect_mutex(node_a1.action.effect_rem, node_a2.action.precond_pos) or \
+               is_effect_mutex(node_a2.action.effect_add, node_a1.action.precond_neg) or \
+               is_effect_mutex(node_a2.action.effect_rem, node_a1.action.precond_pos)
 
     def competing_needs_mutex(self, node_a1: PgNode_a, node_a2: PgNode_a) -> bool:
         '''
